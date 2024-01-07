@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useState } from "react";
 
 const App = () => {
@@ -12,37 +13,45 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
   const [selected, setSelected] = useState(0);
-  const [objAnecdotes, setObjAnecdotes] = useState(Array(anecdotes.length).fill(0))
-  
+  const [objAnecdotes, setObjAnecdotes] = useState(
+    Array(anecdotes.length).fill(0)
+  );
+  const [maxVote, setMaxVote] = useState(0);
 
   const handleClick = () => {
     const min = Math.ceil(0);
     const max = Math.floor(anecdotes.length - 1);
     setSelected(Math.floor(Math.random() * (max - min + 1) + min));
+    
   };
 
   const handleVotebtn = () => {
     const updatedAnecdotes = [...objAnecdotes];
-    // Increment the vote count for the selected anecdote
     updatedAnecdotes[selected] += 1;
-    // Update the state with the new array
     setObjAnecdotes(updatedAnecdotes);
-    console.log(objAnecdotes, objAnecdotes[selected])
+    // setMaxVote(prev => prev.indexOf(Math.max.apply(null, prev))); 
     
-  }
-
+  };
+  useEffect(() => {
+    const maxVoteIndex = objAnecdotes.indexOf(Math.max(...objAnecdotes));
+    setMaxVote(maxVoteIndex);
+  }, [objAnecdotes])
+  console.log(objAnecdotes, objAnecdotes[selected]);
+  console.log(objAnecdotes.indexOf(Math.max.apply(null, objAnecdotes)));
 
   return (
     <div>
-      {anecdotes[selected]}
+      <h1>Anecdotes of the day</h1>
+      <p>{anecdotes[selected]}</p>
       <br />
       <p>has {objAnecdotes[selected]} votes</p>
       <button onClick={handleVotebtn}>vote</button>
-      <button
-        onClick={handleClick}
-      >
-        next anecdote
-      </button>
+      <button onClick={handleClick}>next anecdote</button>
+      <h1>Anecdotes with most votes</h1>
+      { selected !== 0 &&  <div>
+        <p>{anecdotes[maxVote]}</p>
+        <p>has {objAnecdotes[maxVote]} votes</p>
+      </div>}
     </div>
   );
 };
