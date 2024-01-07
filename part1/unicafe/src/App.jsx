@@ -27,7 +27,8 @@ const App = () => {
           bad
         </button>
       </div>
-      <Statistics good={good} neutral={neutral} bad={bad} />
+      <h1>statistics</h1>
+      { (good || neutral || bad) ? <Statistics good={good} neutral={neutral} bad={bad} /> : <p>No feedback given</p>}
     </div>
   );
 };
@@ -38,7 +39,7 @@ const Statistics = ({ good, neutral, bad }) => {
   const positive = (good / all) * 100;
   return (
     <>
-      <h1>statistics</h1>
+      
       <div
         style={{
           display: "flex",
@@ -52,7 +53,7 @@ const Statistics = ({ good, neutral, bad }) => {
         <p style={{ margin: 0 }}>bad {bad}</p>
         <p style={{ margin: 0 }}>all {all}</p>
         <p style={{ margin: 0 }}>average {average}</p>
-        <p style={{ margin: 0 }}>positive {positive}</p>
+        <p style={{ margin: 0 }}>positive {positive}%</p>
       </div>
     </>
   );
