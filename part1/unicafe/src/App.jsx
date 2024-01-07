@@ -49,21 +49,16 @@ const Statistics = ({ good, neutral, bad }) => {
   const positive = (good / all) * 100;
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 0,
-          fontWeight: "bold",
-        }}
-      >
-        <StatisticsLine text={"good"} value={good} />
-        <StatisticsLine text={"neutral"} value={neutral} />
+      <table>
+        <tbody>
+          <StatisticsLine text={"good"} value={good} />
+          <StatisticsLine text={"neutral"} value={neutral} />
         <StatisticsLine text={"bad"} value={bad} />
         <StatisticsLine text={"all"} value={all} />
         <StatisticsLine text={"average"} value={average} />
         <StatisticsLine text={"positive"} value={positive} />
-      </div>
+        </tbody>
+      </table>
     </>
   );
 };
@@ -78,9 +73,10 @@ const Button = ({ styles, text, handleBtn }) => {
 
 const StatisticsLine = ({ text, value }) => {
   return (
-    <p style={{ margin: 0 }}>
-      {text} {value}
-    </p>
+    <tr>
+      <td>{text}</td>
+      <td>{text === "positive" ? value +"%" : value }</td>
+    </tr>
   );
 };
 
