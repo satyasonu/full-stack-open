@@ -12,6 +12,8 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
   const [selected, setSelected] = useState(0);
+  const [objAnecdotes, setObjAnecdotes] = useState(Array(anecdotes.length).fill(0))
+  
 
   const handleClick = () => {
     const min = Math.ceil(0);
@@ -19,17 +21,24 @@ const App = () => {
     setSelected(Math.floor(Math.random() * (max - min + 1) + min));
   };
 
+  const handleVotebtn = () => {
+    const updatedAnecdotes = [...objAnecdotes];
+    // Increment the vote count for the selected anecdote
+    updatedAnecdotes[selected] += 1;
+    // Update the state with the new array
+    setObjAnecdotes(updatedAnecdotes);
+    console.log(objAnecdotes, objAnecdotes[selected])
+    
+  }
+
+
   return (
     <div>
       {anecdotes[selected]}
       <br />
+      <p>has {objAnecdotes[selected]} votes</p>
+      <button onClick={handleVotebtn}>vote</button>
       <button
-        style={{
-          backgroundColor: "white",
-          borderRadius: "5px",
-          borderColor: "Silver",
-          fontWeight: "bold",
-        }}
         onClick={handleClick}
       >
         next anecdote
