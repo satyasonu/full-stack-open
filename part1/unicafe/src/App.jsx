@@ -10,12 +10,8 @@ const App = () => {
     backgroundColor: "white",
     borderRadius: "5px",
     borderColor: "Silver",
-    fontWeight: 'bold'
+    fontWeight: "bold",
   };
-
-  const all = good + neutral + bad;
-  const average = (good - bad) / all;
-  const positive = (good / all) * 100;
 
   return (
     <div>
@@ -31,16 +27,34 @@ const App = () => {
           bad
         </button>
       </div>
+      <Statistics good={good} neutral={neutral} bad={bad} />
+    </div>
+  );
+};
+
+const Statistics = ({ good, neutral, bad }) => {
+  const all = good + neutral + bad;
+  const average = (good - bad) / all;
+  const positive = (good / all) * 100;
+  return (
+    <>
       <h1>statistics</h1>
-      <div style={{display: 'flex', flexDirection: 'column', gap: 0, fontWeight: 'bold'}}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 0,
+          fontWeight: "bold",
+        }}
+      >
         <p style={{ margin: 0 }}>good {good}</p>
         <p style={{ margin: 0 }}>neutral {neutral}</p>
         <p style={{ margin: 0 }}>bad {bad}</p>
-        <p style={{ margin: 0 }}>all { all }</p>
-        <p style={{ margin: 0 }}>average { average}</p>
-        <p style={{ margin: 0 }}>positive { positive}</p>
+        <p style={{ margin: 0 }}>all {all}</p>
+        <p style={{ margin: 0 }}>average {average}</p>
+        <p style={{ margin: 0 }}>positive {positive}</p>
       </div>
-    </div>
+    </>
   );
 };
 
