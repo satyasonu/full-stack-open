@@ -17,18 +17,28 @@ const App = () => {
     <div>
       <h1>give feedback</h1>
       <div>
-        <button style={btnStyles} onClick={() => setGood(good + 1)}>
-          good
-        </button>
-        <button style={btnStyles} onClick={() => setNeutral(neutral + 1)}>
-          neutral
-        </button>
-        <button style={btnStyles} onClick={() => setBad(bad + 1)}>
-          bad
-        </button>
+        <Button
+          styles={btnStyles}
+          text={"good"}
+          handleBtn={() => setGood(good + 1)}
+        />
+        <Button
+          styles={btnStyles}
+          text={"neutral"}
+          handleBtn={() => setNeutral(neutral + 1)}
+        />
+        <Button
+          styles={btnStyles}
+          text={"bad"}
+          handleBtn={() => setBad(bad + 1)}
+        />
       </div>
       <h1>statistics</h1>
-      { (good || neutral || bad) ? <Statistics good={good} neutral={neutral} bad={bad} /> : <p>No feedback given</p>}
+      {good || neutral || bad ? (
+        <Statistics good={good} neutral={neutral} bad={bad} />
+      ) : (
+        <p>No feedback given</p>
+      )}
     </div>
   );
 };
@@ -39,7 +49,6 @@ const Statistics = ({ good, neutral, bad }) => {
   const positive = (good / all) * 100;
   return (
     <>
-      
       <div
         style={{
           display: "flex",
@@ -48,14 +57,30 @@ const Statistics = ({ good, neutral, bad }) => {
           fontWeight: "bold",
         }}
       >
-        <p style={{ margin: 0 }}>good {good}</p>
-        <p style={{ margin: 0 }}>neutral {neutral}</p>
-        <p style={{ margin: 0 }}>bad {bad}</p>
-        <p style={{ margin: 0 }}>all {all}</p>
-        <p style={{ margin: 0 }}>average {average}</p>
-        <p style={{ margin: 0 }}>positive {positive}%</p>
+        <StatisticsLine text={"good"} value={good} />
+        <StatisticsLine text={"neutral"} value={neutral} />
+        <StatisticsLine text={"bad"} value={bad} />
+        <StatisticsLine text={"all"} value={all} />
+        <StatisticsLine text={"average"} value={average} />
+        <StatisticsLine text={"positive"} value={positive} />
       </div>
     </>
+  );
+};
+
+const Button = ({ styles, text, handleBtn }) => {
+  return (
+    <button style={styles} onClick={handleBtn}>
+      {text}
+    </button>
+  );
+};
+
+const StatisticsLine = ({ text, value }) => {
+  return (
+    <p style={{ margin: 0 }}>
+      {text} {value}
+    </p>
   );
 };
 
