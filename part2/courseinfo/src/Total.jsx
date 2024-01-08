@@ -2,10 +2,7 @@ import React from 'react'
 
 const Total = ({total}) => {
   
-  var sum = 0;
-  total.forEach(element => {
-    sum = element.exercises + sum
-  });
+  const sum = total.reduce((a, b) => a + b.exercises, 0)
   return (
     <h5>total of {sum} exercises</h5>
   )
