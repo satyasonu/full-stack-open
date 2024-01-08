@@ -10,8 +10,14 @@ const App = () => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const inputValue = formData.get('inputName')
-      const newPersons = [...persons]
-      setPersons([...newPersons, { name: inputValue}]);
+      const isExist = persons.find(x => x.name === inputValue) ? true : false;
+      if(isExist){
+        alert(`${inputValue} already exists`)
+      }else{
+        const newPersons = [...persons]
+        setPersons([...newPersons, { name: inputValue}]);
+      }
+      
   }
   
 
