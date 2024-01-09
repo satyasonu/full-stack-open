@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Filter from "./Filter";
+import PersonForm from "./PersonForm";
+import Persons from "./Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -36,69 +39,27 @@ const App = () => {
     setFilterPersons(filteredPersons);
   };
 
+  const getNameInput = (e) => {
+    setNewName(e.target.value);
+  };
+
+  const getNumInput = (e) => {
+    setNewNum(e.target.value);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter Shown with
-        <input type="text" value={search} onChange={handlesearch} />
-        {search &&
-          filterPerson.map((person) => {
-            return (
-              <li key={person.id}>
-                {person.name} {person.number}
-              </li>
-            );
-          })}
-      </div>
-      <form onSubmit={handlesubmit}>
-        <div>
-          name:{" "}
-          <input
-            type="text"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            name="inputName"
-            style={{
-              boxShadow: "-1px 1px 5px 2px rgba(66,214,237,1)",
-              border: "none",
-            }}
-          />
-          <br />
-          number:{" "}
-          <input
-            type="text"
-            value={newNum}
-            onChange={(e) => setNewNum(e.target.value)}
-            name="inputNum"
-            style={{
-              boxShadow: "-1px 1px 5px 2px rgba(66,214,237,1)",
-              border: "none",
-            }}
-          />
-        </div>
-        <div>
-          <button
-            style={{
-              backgroundColor: "white",
-              border: "none",
-              borderRadius: "5px",
-              boxShadow: "-1px 1px 5px 0px rgba(0,0,0,0.75)",
-            }}
-            type="submit"
-          >
-            add
-          </button>
-        </div>
-      </form>
+      <Filter
+        search={search}
+        filterPerson={filterPerson}
+        searchFunction={handlesearch}
+      />
+      <PersonForm
+        data={{ handlesubmit, newName, getNameInput, newNum, getNumInput }}
+      />
       <h2>Numbers</h2>
-      {persons.map((person) => {
-        return (
-          <p style={{ margin: 0, padding: 0 }} key={person.name}>
-            {person.name} {person.number}
-          </p>
-        );
-      })}
+      <Persons persons={persons} />
     </div>
   );
 };
