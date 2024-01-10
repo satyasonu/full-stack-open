@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
-import axios from 'axios'
-import personService from './services/PersonService'
+import axios from "axios";
+import personService from "./services/PersonService";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -15,10 +15,8 @@ const App = () => {
   const baseUrl = "http://localhost:3001/persons";
 
   useEffect(() => {
-    personService
-      .getAll()
-      .then(initialdata => setPersons(initialdata))
-  },[])
+    personService.getAll().then((initialdata) => setPersons(initialdata));
+  }, []);
 
   const handlesubmit = (event) => {
     event.preventDefault();
@@ -33,13 +31,15 @@ const App = () => {
       // setPersons([...newPersons, { name: inputValue, number: numValue }]);
       setNewName("");
       setNewNum("");
-      const newPerson = { name: inputValue, number: numValue, id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1}
-      console.log(newPerson)
-      personService
-        .create(newPerson)
-        .then(data => {
-          setPersons(persons.concat(data))
-        })
+      const newPerson = {
+        name: inputValue,
+        number: numValue,
+        id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1,
+      };
+      console.log(newPerson);
+      personService.create(newPerson).then((data) => {
+        setPersons(persons.concat(data));
+      });
     }
   };
 
@@ -59,6 +59,18 @@ const App = () => {
     setNewNum(e.target.value);
   };
 
+  const handleDelete = (person) => {
+    const confirmation = window.confirm(`Delete ${person.name} ?`);
+    if (confirmation) {
+      axios
+        .delete(`${baseUrl}/${person.id}`)
+        .then((res) => console.log("Deleted"));
+
+      const restpersons = persons.filter((p) => p.id !== person.id);
+      setPersons(restpersons);
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -71,7 +83,7 @@ const App = () => {
         data={{ handlesubmit, newName, getNameInput, newNum, getNumInput }}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      <Persons persons={persons} deletefunction={handleDelete} />
     </div>
   );
 };
