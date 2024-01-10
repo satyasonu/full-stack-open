@@ -3,6 +3,7 @@ import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
 import axios from 'axios'
+import personService from './services/PersonService'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -14,11 +15,9 @@ const App = () => {
   const baseUrl = "http://localhost:3001/persons";
 
   useEffect(() => {
-    axios
-      .get(baseUrl)
-      .then(res => {
-        setPersons(res.data)
-      })
+    personService
+      .getAll()
+      .then(initialdata => setPersons(initialdata))
   },[])
 
   const handlesubmit = (event) => {
@@ -30,10 +29,17 @@ const App = () => {
     if (isExist) {
       alert(`${inputValue} already exists`);
     } else {
-      const newPersons = [...persons];
-      setPersons([...newPersons, { name: inputValue, number: numValue }]);
+      // const newPersons = [...persons];
+      // setPersons([...newPersons, { name: inputValue, number: numValue }]);
       setNewName("");
       setNewNum("");
+      const newPerson = { name: inputValue, number: numValue, id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1}
+      console.log(newPerson)
+      personService
+        .create(newPerson)
+        .then(data => {
+          setPersons(persons.concat(data))
+        })
     }
   };
 
