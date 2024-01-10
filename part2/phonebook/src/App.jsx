@@ -17,7 +17,6 @@ const App = () => {
     axios
       .get(baseUrl)
       .then(res => {
-        console.log(res.data);
         setPersons(res.data)
       })
   },[])
