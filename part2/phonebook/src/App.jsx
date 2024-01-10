@@ -24,11 +24,28 @@ const App = () => {
     const inputValue = formData.get("inputName");
     const numValue = formData.get("inputNum");
     const isExist = persons.find((x) => x.name === inputValue) ? true : false;
+    // console.log(persons.find((x) => x.name === inputValue).id)
     if (isExist) {
-      alert(`${inputValue} already exists`);
+      const wantToAddNewNumber = window.confirm(
+        `${inputValue} is already added to phonebook, replace old number with new one?`
+      );
+      if (wantToAddNewNumber) {
+        setNewName("");
+        setNewNum("");
+        const newPerson = {
+          name: inputValue,
+          number: numValue
+        };
+        personService
+          .updateContact(persons.find((x) => x.name === inputValue).id, newPerson)
+          .then(data => { 
+            const personindex = persons.findIndex(p => p.id === data.id)
+            const newState = [...persons];
+            newState[personindex] = newPerson;
+            setPersons(newState)
+          })
+      }
     } else {
-      // const newPersons = [...persons];
-      // setPersons([...newPersons, { name: inputValue, number: numValue }]);
       setNewName("");
       setNewNum("");
       const newPerson = {
@@ -62,9 +79,7 @@ const App = () => {
   const handleDelete = (person) => {
     const confirmation = window.confirm(`Delete ${person.name} ?`);
     if (confirmation) {
-      axios
-        .delete(`${baseUrl}/${person.id}`)
-        .then((res) => console.log("Deleted"));
+      personService.deleteContact(person).then((data) => console.log(data));
 
       const restpersons = persons.filter((p) => p.id !== person.id);
       setPersons(restpersons);
