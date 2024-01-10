@@ -2,7 +2,6 @@ import React from 'react'
 
 const PersonForm = ({data}) => {
   const {handlesubmit, newName, getNameInput, newNum, getNumInput} = data;
-  console.log(typeof getNameInput)
   return (
     <form onSubmit={handlesubmit}>
         <div>
