@@ -13,12 +13,12 @@ const create = (newobj) => {
 }
 
 const deleteContact = (newobj) => {
+  console.log(newobj)
     const response = axios.delete(`${baseUrl}/${newobj.id}`);
-    return response.then(res => res.data);
+    return response.then(res => res);
 }
 
-const updateContact = (id, newobj) => {
-  console.log(newobj)
+const updateContact = (id, newobj) => { 
   const response = axios.put(`${baseUrl}/${id}`, newobj);
   return response.then(res => res.data);
 }

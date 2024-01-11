@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
-import axios from "axios";
 import personService from "./services/PersonService";
+import Notification from "./Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,8 +11,7 @@ const App = () => {
   const [newNum, setNewNum] = useState("");
   const [search, setSearch] = useState("");
   const [filterPerson, setFilterPersons] = useState([]);
-
-  const baseUrl = "http://localhost:3001/persons";
+  const [notificationdata, setNotificationdata] = useState({});
 
   useEffect(() => {
     personService.getAll().then((initialdata) => setPersons(initialdata));
@@ -24,7 +23,6 @@ const App = () => {
     const inputValue = formData.get("inputName");
     const numValue = formData.get("inputNum");
     const isExist = persons.find((x) => x.name === inputValue) ? true : false;
-    // console.log(persons.find((x) => x.name === inputValue).id)
     if (isExist) {
       const wantToAddNewNumber = window.confirm(
         `${inputValue} is already added to phonebook, replace old number with new one?`
@@ -34,16 +32,29 @@ const App = () => {
         setNewNum("");
         const newPerson = {
           name: inputValue,
-          number: numValue
+          number: numValue,
         };
         personService
-          .updateContact(persons.find((x) => x.name === inputValue).id, newPerson)
-          .then(data => { 
-            const personindex = persons.findIndex(p => p.id === data.id)
+          .updateContact(
+            persons.find((x) => x.name === inputValue).id,
+            newPerson
+          )
+          .then((data) => {
+            const newPerson = {
+              name: inputValue,
+              number: numValue,
+              id: data.id
+            };
+            const personindex = persons.findIndex((p) => p.id === data.id);
             const newState = [...persons];
             newState[personindex] = newPerson;
-            setPersons(newState)
-          })
+            setPersons(newState);
+            setNotificationdata({color: 'green', content: `Changed number for ${data.name}` })
+        setTimeout(() => {
+          setNotificationdata({});
+          console.log('updated')
+        }, 12000);
+          });
       }
     } else {
       setNewName("");
@@ -53,9 +64,13 @@ const App = () => {
         number: numValue,
         id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1,
       };
-      console.log(newPerson);
       personService.create(newPerson).then((data) => {
         setPersons(persons.concat(data));
+        setNotificationdata({color: 'green', content: `Added ${data.name}` })
+        setTimeout(() => {
+          setNotificationdata({});
+          console.log('added')
+        }, 12000);
       });
     }
   };
@@ -79,16 +94,19 @@ const App = () => {
   const handleDelete = (person) => {
     const confirmation = window.confirm(`Delete ${person.name} ?`);
     if (confirmation) {
-      personService.deleteContact(person).then((data) => console.log(data));
-
-      const restpersons = persons.filter((p) => p.id !== person.id);
-      setPersons(restpersons);
+      personService.deleteContact(person).then((data) => {
+        if (data.status === 200) {
+          const restpersons = persons.filter((p) => p.id !== person.id);
+          setPersons(restpersons);
+        }
+      });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      {notificationdata && <Notification color={notificationdata.color} content={notificationdata.content} />}
       <Filter
         search={search}
         filterPerson={filterPerson}
