@@ -1,5 +1,6 @@
 import React, { useNavigate, useState } from "react";
 import ShowCountry from './ShowCountry'
+import Weatherdata from "./Weatherdata";
 
 
 const CountryFilter = ({ data }) => {
@@ -33,6 +34,7 @@ const CountryFilter = ({ data }) => {
           src={data[0].flags.png}
           alt={data[0].flags.alt}
         />
+        <Weatherdata city = {data[0].capital[0]} />
       </div>
     );
   } else {

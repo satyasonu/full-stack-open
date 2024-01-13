@@ -9,12 +9,9 @@ function App() {
   const basicURL = "https://studies.cs.helsinki.fi/restcountries/api/all";
   useEffect(() => {
     axios.get(basicURL).then((res) => {
-      if (res.status === 200) {
         setCountryData(res.data);
-        // console.log(res.data[0].name.common)
-      }
-    }, []);
-  });
+    });
+  }, []);
 
   const handleInput = (event) => {
     setInputCountry(event.target.value);
