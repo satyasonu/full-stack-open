@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useNavigate, useState } from "react";
+import ShowCountry from './ShowCountry'
+
 
 const CountryFilter = ({ data }) => {
+  const [showData, setShowData] = useState({});
+
+  const handleShowBtn = (country) => {
+      // navigate('/showcountrydata', {country: country})
+      setShowData(country)
+  }
+
   if (data.length > 10) {
     return <p>Too many mathces, specify another filter</p>;
   } else if (data.length == 1) {
@@ -12,7 +21,11 @@ const CountryFilter = ({ data }) => {
         <p>area {data[0].area}</p>
         <h4>languages:</h4>
         {langs.map((lang) => {
-          return <li key={lang} style={{margin: '0 0 10px 25px '}}>{lang}</li>;
+          return (
+            <li key={lang} style={{ margin: "0 0 10px 25px " }}>
+              {lang}
+            </li>
+          );
         })}
         <img
           height={"150"}
@@ -26,8 +39,14 @@ const CountryFilter = ({ data }) => {
     return (
       <div>
         {data.map((country) => {
-          return <p key={country.name.common}>{country.name.common}</p>;
+          return (
+            <div style={{display: 'flex', padding: 0}} key={country.name.common}> 
+              <p style={{ margin: 0, padding: 0 }}>{country.name.common}</p>
+              <p style={{ margin: 0, padding: 0 }}><button onClick={() =>handleShowBtn(country)}>show</button></p>
+            </div>
+          );
         })}
+        {Object.keys(showData).length != 0 && <ShowCountry data={showData}/>}
       </div>
     );
   }

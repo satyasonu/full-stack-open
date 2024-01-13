@@ -20,7 +20,7 @@ function App() {
     setInputCountry(event.target.value);
     const filtercountry = countryData.filter((country) => country.name.common.toLowerCase().includes(event.target.value.toLowerCase()))
     setFilteredCountries(filtercountry)
-    console.log(filtercountry)
+    // console.log(filtercountry)
   };
   
 
