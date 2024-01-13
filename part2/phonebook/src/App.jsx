@@ -43,17 +43,32 @@ const App = () => {
             const newPerson = {
               name: inputValue,
               number: numValue,
-              id: data.id
+              id: data.id,
             };
             const personindex = persons.findIndex((p) => p.id === data.id);
             const newState = [...persons];
             newState[personindex] = newPerson;
             setPersons(newState);
-            setNotificationdata({color: 'green', content: `Changed number for ${data.name}` })
-        setTimeout(() => {
-          setNotificationdata({});
-          console.log('updated')
-        }, 12000);
+            setNotificationdata({
+              color: "green",
+              content: `Changed number for ${data.name}`,
+            });
+            setTimeout(() => {
+              setNotificationdata({});
+              console.log("updated");
+            }, 12000);
+          })
+          .catch((error) => {
+            if(error.response.status){
+            setNotificationdata({
+              color: "red",
+              content: `Information of ${inputValue} has already been removed from server`,
+            });
+            setTimeout(() => {
+              setNotificationdata({});
+              console.log("removed");
+            }, 10000);
+          }
           });
       }
     } else {
@@ -64,14 +79,15 @@ const App = () => {
         number: numValue,
         id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1,
       };
-      personService.create(newPerson).then((data) => {
+      personService.create(newPerson)
+        .then((data) => {
         setPersons(persons.concat(data));
-        setNotificationdata({color: 'green', content: `Added ${data.name}` })
+        setNotificationdata({ color: "green", content: `Added ${data.name}` });
         setTimeout(() => {
           setNotificationdata({});
-          console.log('added')
+          console.log("added");
         }, 12000);
-      });
+      })
     }
   };
 
@@ -94,19 +110,39 @@ const App = () => {
   const handleDelete = (person) => {
     const confirmation = window.confirm(`Delete ${person.name} ?`);
     if (confirmation) {
-      personService.deleteContact(person).then((data) => {
-        if (data.status === 200) {
-          const restpersons = persons.filter((p) => p.id !== person.id);
-          setPersons(restpersons);
-        }
-      });
+      personService
+        .deleteContact(person)
+        .then((data) => {
+          if (data.status === 200) {
+            const restpersons = persons.filter((p) => p.id !== person.id);
+            setPersons(restpersons);
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 404) {
+            setNotificationdata({
+              color: "red",
+              content: `Information of ${person.name} has already been removed from the server`,
+            });
+            setTimeout(() => {
+              setNotificationdata({});
+              console.log("removed");
+            }, 10000);
+          }
+        });
     }
   };
+  
 
   return (
     <div>
       <h2>Phonebook</h2>
-      {notificationdata && <Notification color={notificationdata.color} content={notificationdata.content} />}
+      {notificationdata && (
+        <Notification
+          color={notificationdata.color}
+          content={notificationdata.content}
+        />
+      )}
       <Filter
         search={search}
         filterPerson={filterPerson}
